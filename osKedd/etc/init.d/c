@@ -1,0 +1,17 @@
+#!/bin/bash
+
+echo -n "Add meg a neved: "
+read NEV
+
+case "$NEV" in
+  "bela")
+     echo "Béla"
+     ;;
+  "jozsef")
+     echo "József"
+     ;;
+  *)
+     echo "Ismeretlen"
+     ;;
+esac
+

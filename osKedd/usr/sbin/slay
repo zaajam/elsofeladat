@@ -1,0 +1,185 @@
+#!/bin/sh
+#
+# slay 2.0 - kill all processes belonging to the specified user(s).
+# originally by Chris Ausbrooks <fish@bucket.ualr.edu> 
+# based on kall (a script of unknown origin)
+# Heavily rewritten by Pawel Wiecek <coven@debian.org> for Debian
+
+# Revision history:
+# 0.99	First attempt.
+# 1.0	Added Butthead.
+# 1.1	Added retribution.
+# 1.2	Added slayee notification.
+# 2.0   Completely rewritten
+# 2.1	Fix an *ugly* bug that caused slayer to be slain...
+# 2.2, 2.3  Debian specific updates
+# 2.4   Updated command line handler to avois username/signal name mismatches
+# 2.5   Debian specific updates
+# 2.6   Properly slay oneself, fixed misleading error messages
+# 3.7   Set PATH to prevent all sorts of problems with it coming from outside
+
+PATH=/usr/sbin:/sbin:/usr/bin:/bin
+export PATH
+
+USER=`whoami`
+SIGNAL='-KILL'
+SLAYEE=''
+ME=`basename $0`
+COOL='0'
+
+# this piece of nested ifs is added for Debian package only
+if [ -f /etc/slay_mode ]
+then
+  if grep -q mean /etc/slay_mode
+  then
+    MODE='mean'
+  fi
+  if grep -q nice /etc/slay_mode
+  then
+    MODE='nice'
+  fi
+  if [ -z $SLAY_BUTTHEAD ]
+  then
+    if grep -q butthead /etc/slay_mode
+    then
+      SLAY_BUTTHEAD='on'
+    fi
+    if grep -q normal /etc/slay_mode
+    then
+      SLAY_BUTTHEAD='off'
+    fi
+  fi
+else
+  MODE='mean'
+  if [ -z $SLAY_BUTTHEAD ]
+  then
+    SLAY_BUTTHEAD='off'
+  fi
+fi
+
+# Command line handling.
+while [ $# -gt 0 ]
+do
+ case $1 in
+  -*)
+   SIGNAL=$1
+   ;;
+  *)
+   SLAYEE="$SLAYEE $1"
+ esac
+ shift
+done
+
+if [ "$SIGNAL" != "-clean" ]
+then
+  SIGSHOW="$SIGNAL"
+else
+  SIGSHOW="-TERM + -KILL"
+fi
+
+# Help for losers.
+if [ "$SLAYEE" = "" -o "$SIGNAL" = "--help" ]
+then
+  echo "usage: $ME [-signal] name [name...]"
+  if [ "$SLAY_BUTTHEAD" = "on" ]
+  then
+    echo "       Like, kills people and stuff."
+    echo "       With -clean kicks ass forst and then does real pain."
+  else
+    echo "       Kills all processes belonging to any of the given names."
+    echo "       Use -clean as a signal name to kill with TERM first and then with KILL."
+  fi
+  exit -1 
+fi
+
+# Misuse trap.
+if [ "$USER" != "$(echo "${SLAYEE}" | tr -d ' ')" ]
+then
+  if [ "$USER" != "root" ]
+  then
+    if [ "$MODE" = "mean" ]
+    then
+      $0 -KILL $USER
+    else
+      if [ "$SLAY_BUTTHEAD" = "on" ]
+      then
+        echo "${ME}: Cut it out."
+      else
+        echo "${ME}: Only root gets to do that."
+      fi
+    fi
+    exit 2
+  fi
+fi
+
+# Main body.
+for slayee in $SLAYEE
+do
+  if [ "$slayee" = "$USER" ]
+  then
+    if [ "$SLAY_BUTTHEAD" = "on" ]
+    then
+      echo "${ME}: Beavis, don't make me have to smack you."
+    else
+      echo "${ME}: Illegal operation."
+    fi
+  fi
+  COOL="1"
+  if [ "$SLAY_BUTTHEAD" = "on" ]
+  then
+    cat <<-_THEEND_ | write $slayee
+	${ME}: ${SIGSHOW} is kicking ${slayee}'s butt!
+	
+	
+	
+	I'm kicking your butt.
+	
+	
+	_THEEND_
+  else
+    cat <<-_THEEND_ | write $slayee
+	${ME}: Sending ${SIGSHOW} signal to ${slayee}'s process(es)..."
+	
+	
+	Your current session has been terminated.
+	
+	
+	_THEEND_
+  fi
+  if [ "$SIGNAL" = "-clean" ]
+  then
+    su -m $slayee -c "kill -TERM -1"
+    sleep 10
+    su -m $slayee -c "kill -KILL -1"
+  else
+    if [ "$USER" != "root" ]
+    then
+      kill $SIGNAL -1
+    fi
+    su -m $slayee -c "kill $SIGNAL -1"
+  fi
+done 2>/dev/null
+
+# Error message.
+if [ $COOL = "0" ]
+then
+  if [ "$SLAY_BUTTHEAD" = "on" ]
+  then
+    echo "${ME}: How old are you, Beavis?"
+  else
+    echo "${ME}: Nothing done."
+  fi
+  exit 1
+fi
+
+# Non-error message.
+if [ $COOL = "1" ]
+then
+  if [ "$SLAY_BUTTHEAD" = "on" ]
+  then
+    echo "${ME}: Whoa, I have the power supreme."
+  else
+    echo "${ME}: Done."
+  fi
+  exit 0
+fi

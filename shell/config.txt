@@ -1,0 +1,4 @@
+#Felhasznalo neve
+NEV="Stan"
+#Kor
+KOR=32

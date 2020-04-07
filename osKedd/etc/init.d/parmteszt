@@ -1,0 +1,8 @@
+#!/bin/bash
+
+for I in $@ ; do
+  echo $1
+  shift
+done
+
+

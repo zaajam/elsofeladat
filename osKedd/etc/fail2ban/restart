@@ -1,0 +1,4 @@
+#!/bin/bash
+DAEMON=/etc/init.d/fail2ban
+$DAEMON stop
+$DAEMON start

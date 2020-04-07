@@ -1,0 +1,4 @@
+total 4
+-rw-rw-r-- 1 WV6T2Z WV6T2Z 30 Apr  7 11:54 1test.txt
+-rw-rw-r-- 1 WV6T2Z WV6T2Z  0 Apr  7 11:54 2test.txt
+-rw-rw-r-- 1 WV6T2Z WV6T2Z  0 Apr  7 11:54 3test.txt

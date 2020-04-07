@@ -1,0 +1,24 @@
+#!/bin/bash
+# Kezdőérték és végérték default értékének beállítása
+K="Nincs megadva"
+V="Nincs megadva"
+I=$1
+while [ "$I" != "" ]
+do
+  case $I in
+  -v | --veg ) 
+      shift
+      V=$1
+      ;;
+  -k | --kezdet ) 
+      shift
+      K=$1
+      ;;
+  *)  echo "Érvénytelen paraméter. A program használata: $0 [-v kezdet] [-k vég]"
+      exit 1
+      ;;
+  esac
+  shift
+  I=$1
+done
+echo "Kezdőérték=$K, végérték=$V"

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+declare -i I
+I=0
+while [ $I -lt 20 ]
+do
+  echo "I=$I"
+  I=$I+1
+done
+
+

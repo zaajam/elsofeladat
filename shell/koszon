@@ -1,0 +1,5 @@
+#!/bin/bash
+
+. config.txt
+
+echo "Hello, kedves $NEV, $KOR!"

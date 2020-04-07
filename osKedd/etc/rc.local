@@ -1,0 +1,31 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+echo "20" > /proc/sys/vm/dirty_background_ratio
+echo "4000" > /proc/sys/vm/dirty_expire_centisecs
+echo "4000" > /proc/sys/vm/dirty_writeback_centisecs
+echo "40" > /proc/sys/vm/dirty_ratio
+echo "0" > /proc/sys/vm/overcommit_ratio
+
+NR_REQUESTS="256"
+SCHEDULER="deadline"
+READ_AHEAD_KB="256"
+
+# [sda]
+echo ${NR_REQUESTS} >   /sys/block/sda/queue/nr_requests
+echo ${SCHEDULER} >     /sys/block/sda/queue/scheduler
+echo ${READ_AHEAD_KB} > /sys/block/sda/queue/read_ahead_kb
+
+
+/usr/bin/apt-get update >/dev/null && /usr/bin/apt-get -dy upgrade >/dev/null
+exit 0

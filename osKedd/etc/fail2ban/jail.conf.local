@@ -1,0 +1,15 @@
+[DEFAULT]
+#          Localhost ns2
+ignoreip = 127.0.0.1 212.92.23.213
+bantime  = 600
+maxretry = 3
+backend = polling
+destemail = root@localhost
+action = iptables[name=%(__name__)s, port=%(port)s]
+ 
+[ssh]
+enabled = true
+port    = ssh
+filter  = sshd
+logpath  = /var/log/auth.log
+maxretry = 3

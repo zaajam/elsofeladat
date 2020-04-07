@@ -1,0 +1,12 @@
+#!/bin/bash
+
+echo -n "Add meg a negyzet oldalat: "
+read N
+
+KER=$(expr 4 \* $N)
+TER=$(expr $N \* $N)
+
+cat <<END
+A negyzet kerulete = $KER
+A negyzet terulete = $TER
+END

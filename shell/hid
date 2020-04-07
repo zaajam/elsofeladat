@@ -1,0 +1,7 @@
+!#/bin/bash
+
+NEV="Zaja Mate"
+T=20
+cat <<END
+Ez itt $NEV $T  az elso schellscriptem amit youtube eloadason tekintek meg...
+END

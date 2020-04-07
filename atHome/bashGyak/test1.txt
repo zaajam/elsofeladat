@@ -1,0 +1,6 @@
+#!/bin/bash
+mkdir test1
+cd test1
+touch testfile1
+nano testfile1
+

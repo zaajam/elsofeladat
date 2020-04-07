@@ -1,0 +1,8 @@
+#!/bin/bash
+
+for I in `cat /etc/passwd | cut -d: -f1`
+do
+  echo "Levél" | mail -s "hwdbwkjhbs" $I@columbo.ektf.hu
+done
+
+
