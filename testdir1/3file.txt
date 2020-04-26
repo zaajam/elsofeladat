@@ -1,0 +1,6 @@
+.
+|-- 1file.txt
+|-- 2file.txt
+`-- 3file.txt
+
+0 directories, 3 files
